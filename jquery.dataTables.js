@@ -23,6 +23,9 @@
 
 /*jslint evil: true, undef: true, browser: true */
 /*globals $,require,jQuery,define,_selector_run,_selector_opts,_selector_first,_selector_row_indexes,_ext,_Api,_api_register,_api_registerPlural,_re_new_lines,_re_html,_re_formatted_numeric,_re_escape_regex,_empty,_intVal,_numToDecimal,_isNumber,_isHtml,_htmlNumeric,_pluck,_pluck_order,_range,_stripHtml,_unique,_fnBuildAjax,_fnAjaxUpdate,_fnAjaxParameters,_fnAjaxUpdateDraw,_fnAjaxDataSrc,_fnAddColumn,_fnColumnOptions,_fnAdjustColumnSizing,_fnVisibleToColumnIndex,_fnColumnIndexToVisible,_fnVisbleColumns,_fnGetColumns,_fnColumnTypes,_fnApplyColumnDefs,_fnHungarianMap,_fnCamelToHungarian,_fnLanguageCompat,_fnBrowserDetect,_fnAddData,_fnAddTr,_fnNodeToDataIndex,_fnNodeToColumnIndex,_fnGetCellData,_fnSetCellData,_fnSplitObjNotation,_fnGetObjectDataFn,_fnSetObjectDataFn,_fnGetDataMaster,_fnClearTable,_fnDeleteIndex,_fnInvalidate,_fnGetRowElements,_fnCreateTr,_fnBuildHead,_fnDrawHead,_fnDraw,_fnReDraw,_fnAddOptionsHtml,_fnDetectHeader,_fnGetUniqueThs,_fnFeatureHtmlFilter,_fnFilterComplete,_fnFilterCustom,_fnFilterColumn,_fnFilter,_fnFilterCreateSearch,_fnEscapeRegex,_fnFilterData,_fnFeatureHtmlInfo,_fnUpdateInfo,_fnInfoMacros,_fnInitialise,_fnInitComplete,_fnLengthChange,_fnFeatureHtmlLength,_fnFeatureHtmlPaginate,_fnPageChange,_fnFeatureHtmlProcessing,_fnProcessingDisplay,_fnFeatureHtmlTable,_fnScrollDraw,_fnApplyToChildren,_fnCalculateColumnWidths,_fnThrottle,_fnConvertToWidth,_fnGetWidestNode,_fnGetMaxLenString,_fnStringToCss,_fnSortFlatten,_fnSort,_fnSortAria,_fnSortListener,_fnSortAttachListener,_fnSortingClasses,_fnSortData,_fnSaveState,_fnLoadState,_fnSettingsFromNode,_fnLog,_fnMap,_fnBindAction,_fnCallbackReg,_fnCallbackFire,_fnLengthOverflow,_fnRenderer,_fnDataSource,_fnRowAttributes*/
+//Star_Man 2017-08-03  group pagination
+var datatable_page_group_count = 10;
+//Star_Man 2017-08-03
 
 (function( factory ) {
 	"use strict";
@@ -4962,8 +4965,9 @@
 		}
 		else if ( action == "previous" )
 		{
+            //Star_Man 2017-08-03  group pagination
 			start = len >= 0 ?
-				start - len :
+				start - len * datatable_page_group_count :
 				0;
 	
 			if ( start < 0 )
@@ -4973,9 +4977,12 @@
 		}
 		else if ( action == "next" )
 		{
-			if ( start + len < records )
+            //Star_Man 2017-08-03  group pagination
+			if ( start + len * datatable_page_group_count < records )
 			{
-				start += len;
+				start += len * datatable_page_group_count;
+			} else {
+                start = Math.floor( (records-1) / len) * len;
 			}
 		}
 		else if ( action == "last" )
@@ -10161,7 +10168,7 @@
 		 *      } );
 		 *    } );
 		 */
-		"aLengthMenu": [ 10, 25, 50, 100 ],
+		"aLengthMenu": [ 10, 20, 50, 100 ],
 	
 	
 		/**
@@ -11185,7 +11192,7 @@
 		 *      } );
 		 *    } )
 		 */
-		"iDisplayLength": 10,
+		"iDisplayLength": 20,
 	
 	
 		/**
@@ -11333,7 +11340,7 @@
 				 *      } );
 				 *    } );
 				 */
-				"sFirst": "First",
+				"sFirst": "처음",
 	
 	
 				/**
@@ -11356,7 +11363,7 @@
 				 *      } );
 				 *    } );
 				 */
-				"sLast": "Last",
+				"sLast": "마감",
 	
 	
 				/**
@@ -11379,7 +11386,7 @@
 				 *      } );
 				 *    } );
 				 */
-				"sNext": "Next",
+				"sNext": "다음",
 	
 	
 				/**
@@ -11402,7 +11409,7 @@
 				 *      } );
 				 *    } );
 				 */
-				"sPrevious": "Previous"
+				"sPrevious": "이전"
 			},
 	
 			/**
@@ -11425,7 +11432,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sEmptyTable": "No data available in table",
+			"sEmptyTable": "현시할 데이터가 없습니다.",
 	
 	
 			/**
@@ -11457,7 +11464,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
+			"sInfo": " 전체수: _TOTAL_ ",
 	
 	
 			/**
@@ -11478,7 +11485,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfoEmpty": "Showing 0 to 0 of 0 entries",
+			"sInfoEmpty": " 전체수: _TOTAL_ ",
 	
 	
 			/**
@@ -11500,7 +11507,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfoFiltered": "(filtered from _MAX_ total entries)",
+			"sInfoFiltered": "",
 	
 	
 			/**
@@ -11618,7 +11625,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sLengthMenu": "Show _MENU_ entries",
+			"sLengthMenu": "현시개수 _MENU_",
 	
 	
 			/**
@@ -11642,7 +11649,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sLoadingRecords": "Loading...",
+			"sLoadingRecords": "데이터 적재중...",
 	
 	
 			/**
@@ -11698,7 +11705,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sSearch": "Search:",
+			"sSearch": "",
 	
 	
 			/**
@@ -11756,7 +11763,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sZeroRecords": "No matching records found"
+			"sZeroRecords": "현시할 데이터가 없습니다."
 		},
 	
 	
@@ -11923,7 +11930,7 @@
 		 *      } );
 		 *    } )
 		 */
-		"sPaginationType": "simple_numbers",
+		"sPaginationType": "full_numbers",
 	
 	
 		/**
@@ -14504,32 +14511,43 @@
 	var extPagination = DataTable.ext.pager;
 	
 	function _numbers ( page, pages ) {
-		var
-			numbers = [],
-			buttons = extPagination.numbers_length,
-			half = Math.floor( buttons / 2 ),
-			i = 1;
-	
-		if ( pages <= buttons ) {
-			numbers = _range( 0, pages );
-		}
-		else if ( page <= half ) {
-			numbers = _range( 0, buttons-2 );
-			numbers.push( 'ellipsis' );
-			numbers.push( pages-1 );
-		}
-		else if ( page >= pages - 1 - half ) {
-			numbers = _range( pages-(buttons-2), pages );
-			numbers.splice( 0, 0, 'ellipsis' ); // no unshift in ie6
-			numbers.splice( 0, 0, 0 );
-		}
-		else {
-			numbers = _range( page-half+2, page+half-1 );
-			numbers.push( 'ellipsis' );
-			numbers.push( pages-1 );
-			numbers.splice( 0, 0, 'ellipsis' );
-			numbers.splice( 0, 0, 0 );
-		}
+
+		//Star_Man 2017-08-03  group pagination
+        var
+			remain_val = (page % datatable_page_group_count),
+			min_page = page - remain_val,
+			max_page = (pages > page - remain_val + datatable_page_group_count) ? page - remain_val + datatable_page_group_count : pages;
+        var numbers = _range( min_page, max_page );
+        if (min_page > 0)
+            numbers.unshift( 'ellipsis' );
+		if (max_page < pages)
+            numbers.push( 'ellipsis' );
+		//Star_Man 2017-08-03
+        // var
+        //    numbers = [],
+        //    buttons = extPagination.numbers_length,
+        //    half = Math.floor( buttons / 2 ),
+        //    i = 1;
+		// if ( pages <= buttons ) {
+		// 	numbers = _range( 0, pages );
+		// }
+		// else if ( page <= half ) {
+		// 	numbers = _range( 0, buttons-2 );
+		// 	numbers.push( 'ellipsis' );
+		// 	numbers.push( pages-1 );
+		// }
+		// else if ( page >= pages - 1 - half ) {
+		// 	numbers = _range( pages-(buttons-2), pages );
+		// 	numbers.splice( 0, 0, 'ellipsis' ); // no unshift in ie6
+		// 	numbers.splice( 0, 0, 0 );
+		// }
+		// else {
+		// 	numbers = _range( page-half+2, page+half-1 );
+		// 	numbers.push( 'ellipsis' );
+		// 	numbers.push( pages-1 );
+		// 	numbers.splice( 0, 0, 'ellipsis' );
+		// 	numbers.splice( 0, 0, 0 );
+		// }
 	
 		numbers.DT_el = 'span';
 		return numbers;
